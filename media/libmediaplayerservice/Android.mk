@@ -63,6 +63,13 @@ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
     endif
 endif
 
+ifeq ($(BOARD_HAS_MTK_HARDWARE),true)
+    LOCAL_C_INCLUDES += \
+        $(TOP)/hardware/mediatek/media/include
+    LOCAL_STATIC_LIBRARIES += \
+        libstagefright_bufferallocator
+endif
+
 LOCAL_MODULE:= libmediaplayerservice
 
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS),true)
