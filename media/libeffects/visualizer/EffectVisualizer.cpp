@@ -592,7 +592,6 @@ int Visualizer_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
         } else {
             memset(pReplyData, 0x80, pContext->mCaptureSize);
         }
-        }
         break;
 
     case VISUALIZER_CMD_MEASURE: {
