@@ -2093,7 +2093,6 @@ status_t AudioFlinger::closeOutput_nonvirtual(audio_io_handle_t output)
                     DuplicatingThread *dupThread =
                             (DuplicatingThread *)mPlaybackThreads.valueAt(i).get();
                     dupThread->removeOutputTrack((MixerThread *)thread.get());
-
                 }
             }
         }
@@ -2814,6 +2813,17 @@ status_t AudioFlinger::moveEffectChain_l(int sessionId,
     if (chain == 0) {
         ALOGW("moveEffectChain_l() effect chain for session %d not on source thread %p",
                 sessionId, srcThread);
+        return INVALID_OPERATION;
+    }
+
+    // Check whether the destination thread has a channel count of FCC_2, which is
+    // currently required for (most) effects. Prevent moving the effect chain here rather
+    // than disabling the addEffect_l() call in dstThread below.
+    if ((dstThread->type() == ThreadBase::MIXER || dstThread->isDuplicating()) &&
+            dstThread->mChannelCount != FCC_2) {
+        ALOGW("moveEffectChain_l() effect chain failed because"
+                " destination thread %p channel count(%u) != %u",
+                dstThread, dstThread->mChannelCount, FCC_2);
         return INVALID_OPERATION;
     }
 

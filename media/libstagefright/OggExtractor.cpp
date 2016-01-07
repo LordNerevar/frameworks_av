@@ -844,7 +844,7 @@ static void extractAlbumArt(
 
     size_t flacSize = flacBuffer->size();
     uint8_t *flac = flacBuffer->data();
-    ALOGV("got flac of size %zu", flacSize);
+    ALOGV("got flac of size %d", flacSize);
 
     uint32_t picType;
     uint32_t typeLen;
@@ -892,7 +892,6 @@ static void extractAlbumArt(
     }
 
     dataLen = U32_AT(&flac[8 + typeLen + 4 + descLen + 16]);
-
 
     // we've already checked above that (flacSize - 32 - typeLen - descLen) >= 0
     if (flacSize - 32 - typeLen - descLen < dataLen) {

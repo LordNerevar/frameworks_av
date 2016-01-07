@@ -544,11 +544,10 @@ int Visualizer_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
         break;
 
 
-    case VISUALIZER_CMD_CAPTURE: {
-        uint32_t captureSize = pContext->mCaptureSize;
-        if (pReplyData == NULL || replySize == NULL || *replySize != captureSize) {
-            ALOGV("VISUALIZER_CMD_CAPTURE() error *replySize %" PRIu32 " captureSize %" PRIu32,
-                    *replySize, captureSize);
+    case VISUALIZER_CMD_CAPTURE:
+        if (pReplyData == NULL || replySize == NULL || *replySize != pContext->mCaptureSize) {
+            ALOGV("VISUALIZER_CMD_CAPTURE() error *replySize %d pContext->mCaptureSize %d",
+                    *replySize, pContext->mCaptureSize);
             return -EINVAL;
         }
         if (pContext->mState == VISUALIZER_STATE_ACTIVE) {
