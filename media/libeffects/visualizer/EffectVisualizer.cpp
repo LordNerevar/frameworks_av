@@ -571,7 +571,7 @@ int Visualizer_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
             if (latencyMs < 0) {
                 latencyMs = 0;
             }
-            uint32_t deltaSmpl = captureSize + pContext->mConfig.inputCfg.samplingRate * latencyMs / 1000;
+            uint32_t deltaSmpl = pContext->mCaptureSize + pContext->mConfig.inputCfg.samplingRate * latencyMs / 1000;
                  // large sample rate, latency, or capture size, could cause overflow.
                  // do not offset more than the size of buffer.
                  if (deltaSmpl > CAPTURE_BUF_SIZE) {
