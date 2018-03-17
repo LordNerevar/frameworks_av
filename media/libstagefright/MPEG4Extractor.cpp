@@ -43,11 +43,6 @@
 #include <media/stagefright/MediaSource.h>
 #include <media/stagefright/MetaData.h>
 #include <utils/String8.h>
-
-#ifndef UINT32_MAX
-#define UINT32_MAX       (4294967295U)
-#endif
-
 #ifdef ENABLE_AV_ENHANCEMENTS
 #include <QCMediaDefs.h>
 #include "include/ExtendedUtils.h"
@@ -1968,7 +1963,6 @@ status_t MPEG4Extractor::parseChunk(off64_t *offset, int depth) {
             if ((chunk_size > SIZE_MAX) || (SIZE_MAX - chunk_size <= size)) {
                 return ERROR_MALFORMED;
             }
-
             uint8_t *buffer = new (std::nothrow) uint8_t[size + chunk_size];
             if (buffer == NULL) {
                 return ERROR_MALFORMED;
@@ -2004,7 +1998,6 @@ status_t MPEG4Extractor::parseChunk(off64_t *offset, int depth) {
                 if (chunk_data_size < 0 || static_cast<uint64_t>(chunk_data_size) >= SIZE_MAX - 1) {
                     return ERROR_MALFORMED;
                 }
-
                 sp<ABuffer> buffer = new ABuffer(chunk_data_size + 1);
                 if (buffer->data() == NULL) {
                     ALOGE("b/28471206");
@@ -3646,12 +3639,12 @@ status_t MPEG4Source::read(
             size_t dstOffset = 0;
 
             while (srcOffset < size) {
-                bool isMalFormed = !isInRange((size_t)0u, size, srcOffset, mNALLengthSize);
+                bool isMalFormed = !isInRange(0u, size, srcOffset, mNALLengthSize);
                 size_t nalLength = 0;
                 if (!isMalFormed) {
                     nalLength = parseNALSize(&mSrcBuffer[srcOffset]);
                     srcOffset += mNALLengthSize;
-                    isMalFormed = !isInRange((size_t)0u, size, srcOffset, nalLength);
+                    isMalFormed = !isInRange(0u, size, srcOffset, nalLength);
                 }
 
                 if (isMalFormed) {
@@ -3838,14 +3831,6 @@ status_t MPEG4Source::fragmentedRead(
 
     if (!mIsAVC || mWantsNALFragments) {
         if (newBuffer) {
-            if (!isInRange((size_t)0u, mBuffer->size(), size)) {
-                mBuffer->release();
-                mBuffer = NULL;
-
-                ALOGE("fragmentedRead ERROR_MALFORMED size %zu", size);
-                return ERROR_MALFORMED;
-            }
-
             ssize_t num_bytes_read =
                 mDataSource->readAt(offset, (uint8_t *)mBuffer->data(), size);
 

@@ -955,11 +955,6 @@ ACodec::BufferInfo *ACodec::dequeueBufferFromNativeWindow() {
         return NULL;
     }
 
-    if (mFatalError) {
-        ALOGW("not dequeuing from native window due to fatal error");
-        return NULL;
-    }
-
     BufferInfo *oldest = NULL;
     for (size_t i = mBuffers[kPortIndexOutput].size(); i-- > 0;) {
         BufferInfo *info =

@@ -120,7 +120,7 @@ void SoftMP3::initDecoder() {
 
 void *SoftMP3::memsetSafe(OMX_BUFFERHEADERTYPE *outHeader, int c, size_t len) {
     if (len > outHeader->nAllocLen) {
-        ALOGE("memset buffer too small: got %u, expected %zu", outHeader->nAllocLen, len);
+        ALOGE("memset buffer too small: got %lu, expected %zu", outHeader->nAllocLen, len);
         android_errorWriteLog(0x534e4554, "29422022");
         notify(OMX_EventError, OMX_ErrorUndefined, OUTPUT_BUFFER_TOO_SMALL, NULL);
         mSignalledError = true;
@@ -321,7 +321,7 @@ void SoftMP3::onQueueFilled(OMX_U32 portIndex) {
 
             // This is recoverable, just ignore the current frame and
             // play silence instead.
-            if (!memsetSafe(outHeader, 0, mConfig->outputFrameSize * (sizeof(int16_t)))) {
+            if (!memsetSafe(outHeader, 0, mConfig->outputFrameSize * sizeof(int16_t))) {
                 return;
             }
 

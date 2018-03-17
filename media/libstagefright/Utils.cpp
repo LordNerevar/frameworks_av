@@ -306,7 +306,6 @@ status_t convertMetaDataToMessage(
         if (buffer.get() == NULL || buffer->base() == NULL) {
             return NO_MEMORY;
         }
-
         memcpy(buffer->data(), data, size);
 
         buffer->meta()->setInt32("csd", true);

@@ -250,7 +250,7 @@ status_t BnCrypto::onTransact(
 
             void *secureBufferId, *dstPtr;
             if (secure) {
-                secureBufferId = reinterpret_cast<void *>(static_cast<uintptr_t>(data.readInt64()));
+                secureBufferId = (void *)data.readIntPtr();
             } else {
                 dstPtr = malloc(totalSize);
                 memset(dstPtr, 0, totalSize);

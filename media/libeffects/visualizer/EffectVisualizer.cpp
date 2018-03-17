@@ -558,10 +558,11 @@ int Visualizer_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
         break;
 
 
-    case VISUALIZER_CMD_CAPTURE:
-        if (pReplyData == NULL || replySize == NULL || *replySize != pContext->mCaptureSize) {
-            ALOGV("VISUALIZER_CMD_CAPTURE() error *replySize %d pContext->mCaptureSize %d",
-                    *replySize, pContext->mCaptureSize);
+    case VISUALIZER_CMD_CAPTURE: {
+        uint32_t captureSize = pContext->mCaptureSize;
+        if (pReplyData == NULL || replySize == NULL || *replySize != captureSize) {
+            ALOGV("VISUALIZER_CMD_CAPTURE() error *replySize %" PRIu32 " captureSize %" PRIu32,
+                    *replySize, captureSize);
             return -EINVAL;
         }
         if (pContext->mState == VISUALIZER_STATE_ACTIVE) {
@@ -571,7 +572,7 @@ int Visualizer_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
             if (latencyMs < 0) {
                 latencyMs = 0;
             }
-            uint32_t deltaSmpl = pContext->mCaptureSize + pContext->mConfig.inputCfg.samplingRate * latencyMs / 1000;
+            uint32_t deltaSmpl = captureSize + pContext->mConfig.inputCfg.samplingRate * latencyMs / 1000;
                  // large sample rate, latency, or capture size, could cause overflow.
                  // do not offset more than the size of buffer.
                  if (deltaSmpl > CAPTURE_BUF_SIZE) {
@@ -611,6 +612,7 @@ int Visualizer_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
             pContext->mLastCaptureIdx = pContext->mCaptureIdx;
         } else {
             memset(pReplyData, 0x80, pContext->mCaptureSize);
+        }
         }
         break;
 
